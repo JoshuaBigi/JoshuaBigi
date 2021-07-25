@@ -1,0 +1,596 @@
+### These are some important concepts in stats to be solved
+### Explanation is provided to have a glance, Examples here are the questions to be solved
+#### You have mastered the basics—now you are ready to take it up a notch.
+
+## 1. Joint Probability refers to the probability of occurrence involving two or more events
+
+Let A and B be the two events in a sample space. Then the joint probability if the two events denoted by P(A $\cap$ B), is 
+given by 
+$P(A \cap B) = \frac{Number \quad of \quad observations \quad in \quad A \cap B } {Total \quad Number \quad of \quad observations}$ 
+
+### Example:
+At a popular company service center, a total of 100 complaints were received. 80 customers complained about late delivery of 
+the items and 60 complained about poor product quality.
+
+a) Calculate the probability that a customer complaint will be about both product quality and late delivery.
+
+b) What is the probability that a complaint will be only about late delivery?
+
+### Solution:
+    
+a) Calculate the probability that a customer complaint will be about both product quality and late delivery
+
+Let
+
+L = Late delivery
+
+Q = Poor quality
+
+n(L) = Number of cases in favour of L = 80
+
+n(Q) = Number of cases in favour of Q = 60
+
+N = Total Number of complaints = 100 
+
+L intersection Q = 40
+
+Probability that a customer complaint will be about both product quality and late delivery = $P(L \cap Q)$
+
+$P(L \cap Q) =  \frac{n(L \cap Q)} {Total \quad Number \quad of \quad observations}$ 
+
+FE4 = 40
+TE  = 100
+PE4 = round(FE4 / TE,4) 
+print('a.Probability that a customer complaint will\n\
+       be about both product quality and late delivery. is %1.4f' % PE4)
+
+b. What is the probability that a complaint will be only about late delivery
+
+# FE5 is the complaints about poor quality
+FE5 = 60
+TE  = 100
+PE5 = round(FE5 / TE,4) 
+PE6 = 1 - PE5
+# So,1 - PE5 is the Probability that a customer complaint will be about
+#        both product quality and late delivery 
+print('b.probability that a complaint will be \n\
+         only about late delivery. is %1.4f' % PE6)
+
+## 2. Conditional Probability refers to the probability of event A, given information about the occurrence of another event B
+
+Probability of A given B is written as P(A | B).
+
+$P(A\mid B) = \frac{P(A \quad and \quad B)}{P(B)}$
+
+where P(A and B) = Joint probability of A and B
+*     P(A)       = Marginal probability of A
+*     P(B)       = Marginal probability of B
+
+### Example:
+The following table describes loan default status at a bank and their marital status. 
+
+| Marital Status | Loan Defaulted | Loan No Default | Marginal Total |
+| ----------- | ------ | ------- | -------- |
+| Single | 42 | 258 | 300 |
+| Married | 60 | 590 | 650 |
+| Divorced | 13 | 37 | 50 |
+| Marginal Total | 115 | 885 | 1000 |
+
+
+Based on the above table, calculate the probability of default given divorced.
+
+### Solution:
+
+# P1 = P(Default and Divorced)
+P1   = 13 / 1000
+# P2 = P(Divorced)
+P2   = 50 / 1000
+#P3  = P(Default | Divorced) = P(Default and Divorced) / P(Divorced)
+P3   = P1 / P2
+print('P(Default | Divorced)  is %1.4f' % P3)    
+
+## 3. Binomial distribution
+
+It is widely used probability distribution of a discrete random variable. 
+
+Plays major role in quality control and quality assurance function. 
+
+$P(X = x\mid n,\pi)$ = $\frac{n!}{x!(n - x)!}\pi^x (1 - \pi)^{n-x} $
+* where P(X = x) is the probability of getting x successes in n trials
+and $\pi$ is the probability of an event of interest
+
+### Some important functions in Python for Binomial distribution:
+
+#### 1) Probability mass function
+
+##### scipy.stats.binom.pmf gives the probability mass function for the binomial distribution
+
+binomial = scipy.stats.binom.pmf (k,n,p), 
+* where k is an array and takes values in {0, 1,..., n}
+* n and p are shape parameters for the binomial distribution
+
+The output, binomial, gives probability of binomial distribution function in terms of array.
+
+#### 2) Cumulative Density function
+
+cumbinomial = scipy.stats.binom.cdf(k,n,p) gives cumulative binomial distribution.
+
+The output, cumbinomial, gives cumulative probability of binomial distribution function in terms of array.
+
+####  3)  Plot the binomial Density function
+
+The function, matplotlib.pyplot.plot(k, binomial, ‘o-’) gives us plot of the binomial distribution function.
+
+### Example
+The percentage of orders filled correctly at Wendy's was approximately 86.8%. Suppose that you go to drive-through window at 
+Wendy's and place an order. Two friends of yours independently place orders at the drive-through window at the same Wendy's.
+
+What are the probabilities that 
+* a) all three 
+* b) none of the three
+* c) atleast two of the three orders will be filled correctly?
+* d) what is the mean and standard deviation of the orders filled correctly?
+
+### Solution
+
+import numpy as np
+p   =  0.868 # percentage of orders filled correctly at Wendy's was approximately 86.8%
+n   =  3
+k   =  np.arange(0,4)
+
+from scipy import stats
+binomial = stats.binom.pmf(k,n,p)
+
+print(binomial)
+
+print('a) all the three orders are filled correctly? is %1.4f' %binomial[3])
+
+print('b) none of the three orders are filled correctly? is %1.4f' %binomial[0])
+
+To answer this question c) atleast two of the three orders are filled correctly, we need to find out 1 - Probability of upto 1 
+failure
+
+cumbinomial = stats.binom.cdf(k,n,p)
+
+print(cumbinomial)
+
+P = 1 - cumbinomial[1]
+print('c) atleast two of the three orders are filled correctly? is %1.4f' % P)
+
+# d) what is the mean and standard deviation of the orders filled correctly?
+p    = 0.868
+n    = 3
+mean = n* p # = 3 * 0.868
+sd   = np.sqrt(n * p * (1 - p))
+print('mean and standard deviation of the orders filled correctly are %1.4f and  %1.4f respectively' % (mean, sd))
+
+### Plot  the binomial distribution function
+
+import matplotlib.pyplot as plt
+plt.plot(k,binomial, 'o-')
+plt.title('Binomial')
+plt.xlabel('Number of Orders filled correctly')
+plt.ylabel('Prob of Orders filled correctly')
+plt.show()
+
+## 4. Poisson Distribution
+
+* This discrete distribution which also plays a major role in quality control. 
+* The Poisson distribution is a discrete probability distribution for the counts of events that occur randomly in a given 
+interval of time or space. In such areas of opportunity, there can be more than one occurrence. In such situations, Poisson 
+distribution can be used to compute probabilities.
+* Examples include number of defects per item, number of defects per transformer produced. 
+* Notes: Poisson Distribution helps to predict the arrival rate in a waiting line situation where a queue is formed and people 
+wait to be served and the service rate is generally higher than the arrival rate.
+
+### Properties:
+* Mean                     μ  = λ
+* Standard deviation       σ  = √ μ
+* The Poisson distribution is the limit of binomial distribution as n approaches ∞and p approaches 0
+
+
+P(X = x) = $\frac{e^\lambda \lambda^x}{x!} $
+where 
+* P(x)              = Probability of x successes given an idea of  $\lambda$
+* $\lambda$ = Average number of successes
+* e                   = 2.71828 (based on natural logarithm)
+* x                    = successes per unit which can take values 0,1,2,3,... $\infty$
+
+### Applications
+
+1. Car Accidents
+2. Number of deaths by horse kicking in Prussian Army (first application)
+3. Birth defects and genetic mutation
+
+### Note
+
+* If there is a fixed number of observations, n, each of which is classified as an event of interest or not an event of interest, use the binomial distribution.
+* If there is an area of opportunity, use the Poisson distribution.
+
+
+### Example
+The number of work-related injuries per month in a manufacturing plant is known to follow a Poisson distribution, with a mean  
+of 2.5 work-related injuries a month. What is the probability that in a given month, 
+
+a) No work related injuries occur? 
+
+b) At least one work-related injury occurs?
+
+### Solution
+
+Here, 
+$\lambda$ = 2.5 injuries
+
+rate =  2.5 # which is the mean
+n    =  np.arange(0,20)
+poisson = stats.poisson.pmf(n,rate)
+
+poisson
+
+print(' a) Probability that No work related injuries occur is %1.4f' % poisson[0])
+
+To calculate the probability that at least one work-related injury occurs, we need to subtract probability of no work related 
+injury from 1.
+
+# P = probability that at least one work-related injury occurs
+P   = 1 - poisson[0]
+print(' b) Probability that that at least one work-related injury occurs is %1.4f' % P)
+
+Plot the Poisson distribution function
+
+plt.plot(n,poisson, 'o-')
+plt.title('Poisson')
+plt.xlabel('Number of Work related injuries')
+plt.ylabel('Prob of Work related injuries')
+plt.show()
+
+## 5. Normal Distribution
+
+* One of the most popular continuous distribution in Analytics field.
+* Normal distribution is observed across many naturally occurring measures such as birth weight, height and intelligence etc
+
+#### Probability Density Function
+
+f(x) = $\frac {1}{\sigma\sqrt(2 \pi)} e^\frac {-(x-\mu^2)}{2\sigma^2}$
+
+Where
+
+* f(x) is used to represent a probability density function
+* x is any value of the continuous variable, where -∞ < x < ∞
+* e denotes the mathematical constant approximated by 2.71828
+* Π is a mathematical constant approximated by 3.14159
+* μ and σ are the mean and standard deviation of the normal distribution
+
+For a continuous function, the probability density function is the probability that the value has the value x. 
+Since for continuous distributions the probability at a single point is zero, this is expressed in terms of an integral of its probability density function
+P(X<= x) = F(x) = 
+$\int_{-\infty}^xf(t)dt$
+
+
+Its pdf is given by
+
+fZ(z) = $\frac{1}{ √2Π} {exp \frac {-z2} {2}}$
+
+for all z $\in R$
+
+The (1 / √2Π ) is there to make sure that the area under the PDF is 1.
+
+* For a normal distribution, mu is the location parameter, which locates (centre) the distribution on the horizontal axis.
+* Sigma is the scale parameter, which defines the spread of the normal distribution.
+* Normal distribution has no shape parameter since all the normal distribution curves have bell shape and are symmetrical.
+
+### Properties
+1. Theoretical normal density functions are defined between -∞ and ∞
+2. There are two parameters, location (μ which is the mean) and scale (σ which is standard deviation).
+3. It has a symmetrical (bell shape) around the mean. mean = median = mode
+4. Areas between specific values are measured in terms of μ and σ
+5. Any linear transformation if a normal random variable is also normal random variable.
+6. If X1 is an independent normal random variable with mean μ1 and variance $\sigma1^2$ and 
+      X2 is another independent normal random variable with mean μ2 and$\sigma2^2$, 
+then X1 + X2 is also a normal distribution with mean μ1 + μ2 and variance $\sigma1^2$ + $\sigma2^2$ 
+
+| Value of the random variable | Area under the normal distribution (CDF) |
+| --------------------------------- | --------------------------|
+| $\mu - \sigma \leq x \leq \mu + \sigma$ | 0.6828 |
+| $\mu - 2\sigma \leq x \leq \mu + 2\sigma$ | 0.9545 |
+| $\mu - 3\sigma \leq x \leq \mu + 3\sigma$ | 0.9974 |
+
+### Example:
+
+The mean salaries of Data Scientists working in Chennai, India is calculated to be 7,00,000 INR with a standard deviation of 90,000 INR. The random variable salary of Data Scientists follows a normal distribution.
+
+* a) What is the probability that a Data Scientist in Chennai has a salary more than 10,00,000 INR?
+* b) What is the probability that a Data Scientist in Chennai has a salary between 6,00,000 & 9,00,000 INR?
+* c) What is the probability that a Data Scientist in Chennai has a salary less than 4,00,000 INR?
+
+### Solution
+
+# a) What is the probability that a Data Scientist in Chennai has a salary more than 10,00,000 INR?
+mu    =  700000
+sigma =  90000
+z=(1000000-mu) / sigma 
+
+P = 1 - stats.norm.cdf(z)
+print(' a) Probability that a Data Scientist in Chennai has a salary more than 10,00,000 is %1.4f' % P)
+
+# b) What is the probability that a Data Scientist in Chennai has a salary between 6,00,000 & 9,00,000 INR?
+z1= (600000-mu) / sigma
+z2= (900000-mu) / sigma
+
+P = stats.norm.cdf(z2) - stats.norm.cdf(z1)
+print(' b) probability that a Data Scientist in Chennai has a salary between 6,00,000 & 9,00,000 INR is %1.4f' % P)
+
+# c) What is the probability that a Data Scientist in Chennai has a salary less than 4,00,000 INR?
+z = (400000-mu) / sigma 
+
+P = stats.norm.cdf(z)
+print(' c) Probability that a Data Scientist in Chennai has a salary less than 4,00,000 INR is %1.4f' % P)
+
+## 6.Central Limit Theorem
+
+* Central Limit Theorem (CLT) is one of the most important theorems in Statistics due to its applications in testing of 
+hypothesis.
+
+* CLT states that for a large sample drawn from a population with mean $\mu$ and standard deviation $\sigma$, the sampling 
+distribution of mean, follows an approximate normal distribution with mean, μ and standard error σ / √(n) irrespective of the 
+distribution of the population for large sample size.
+
+* Let S1, S2, ..., Sk be samples of size n, drawn from an independent and identically distributed population with mean, μ and 
+standard deviation, σ. 
+
+* Let be $\overline{X_1}$, $\overline{X_2}$, ..., $\overline{X_k}$,  the sample means of the samples (S1, S2, ..., Sk ). 
+
+* According to CLT, the distribution of $\overline{X_1}$, $\overline{X_2}$, ..., $\overline{X_k}$, follows a normal 
+distribution with mean, μ and standard deviation, σ / √(n) for large value of n. 
+
+* As a general rule, statisticians have found that for many population distribution, when the sample size is at least 30, the 
+sampling distribution of the mean is approximately **normal.**
+
+### Implications of CLT
+* 1) X - μ / (σ / √(n) ~ N(0,1)
+* 2) If Sn = X1 + X2 + ... + Xn, then E(Sn) = nμ and Standard Error is σ √(n)
+* The random variable (Sn - nμ ) / (σ √(n))  is a standard normal variate
+
+### Example
+A hospital is interested in estimating the average time it takes to discharge a patient after the doctor signs the discharge 
+summary sheet. 
+
+Calculate the required sample size at a confidence level of 95%. Assume that the population standard deviation is 25 minutes. The Hospital wants the estimate of the mean to be within +/- 5 mins
+
+### Solution
+
+From the CLT (Central Limit theorem), we know that the sampling distribution of the mean follows a normal distribution with 
+mean $\mu$ and standard deviation $\frac{\sigma}{\sqrt{n}}$.  
+
+**Standard Normal Variate Z = $\frac{\overline{X},- \mu} {\frac{\sigma}{\sqrt{n}}}$**
+
+So, $\sqrt{n} = {\frac{Z \quad \times \quad \sigma} {\overline{X} - \mu}}$
+
+* Let  Diff = $\overline{X}- \mu$ 
+* Diff = 5 minutes
+* $\sigma = 25 $
+* $\alpha = 0.05$
+
+# Let n be the sample size
+
+import  scipy.stats as stats
+import  numpy       as np
+
+Z     = round(stats.norm.isf(q = 0.025),2) # We need to calculate the value of Z at (alpha/2) when alpha = 0.05
+sigma = 25
+D     = 5
+
+print(np.abs(Z))
+
+n = round(((np.abs(Z) * sigma ) / D)**2,0)
+
+print('The required sample size at a confidence level of %d%s is %d' % (95,'%',n))
+
+## 7.Setting up Hypothesis
+
+### Type I Error, Type II error and power of the hypothesis test
+
+### Type I error
+
+* It is the conditional probability of rejecting a null hypothesis when it is true, is called **Type I error or False positive.
+**
+* $\alpha$, the level of significance is the value of Type I error.
+* P(Reject null hypothesis | $H_0$ is true) = $\alpha$
+
+### Type II error
+
+* It is the conditional probability of retaining a null hypothesis when it is true, is called **Type II error or False Negative.
+**
+* $\beta$, is the value of Type II error.
+* P(Retain null hypothesis | $H_0$ is false) = $\beta$
+
+### Power of the test
+
+* (1 - $\beta$) is known as the **power of the test**.
+* It is P(Reject null hypothesis | $H_0$ is false) = 1- $\beta$
+
+## Steps involved in solving the hypothesis testing
+
+### 1 Define null and alternative hypothesis
+
+* ### Null hypothesis means no relationship or status quo
+* ### Alternative hypothesis is what the researcher wants to prove
+
+### 2: Decide the significance level
+
+Choose the $\alpha$, the level of significance according to the relative importance of the risks of committing Type I and Type II errors in the problem. 
+
+### 3:  Identify the test statistic
+
+### 4: Calculate the critical value
+
+We know the $\alpha$ is 0.05. So, the critical values of the $Z_STAT$ test statistic are -1.96 and 1.96.
+
+### 5 Decide to reject or accept null hypothesis
+
+### Example 
+
+A beverages company produces mineral water and available in 250 ml, 500 ml, 1 litre and 2 litre bottles, 5 litre, 15 litre and 
+20 litre jars.
+Let us consider 2 litre bottles. Company specification require a mean volume of 2 litre per bottle.
+You must adjust the water filling process when the mean volume in the population of bottles differs from 2 litres. Adjusting 
+the process requires shutting down the water filling production line completely, so you do not want to make any adjustments 
+without any reason unnecessarily.
+
+Assume a sample of 50 water bottles indicate a sample mean, $\overline{X}$ of 2.001 litres and the population standard 
+deviation, $\sigma$ is 15 ml.
+
+#### Hypothesis testing using the critical value approach
+
+## Solution
+
+### Step 1: Define null and alternative hypotheses
+
+In testing whether the mean volume is 2 litres, the null hypothesis states that mean volume, $\mu$ equals 2 litres. The 
+alternative hypthesis states that the mean olume, $\mu$ is not equal  to 2 litres.
+* $H_0$: $\mu$ = 2
+* $H_A$: $\mu$ $\neq$ 2
+
+### Step 2: Decide the significance level
+
+Choose the $\alpha$, the level of significance according to the relative importance of the risks of committing Type I and 
+Type II errors in the problem. 
+
+In this example, making a Type I error means that you conclude that the population mean is not 2 litres when it is 2 litres. 
+This implies that you will take corrective action on the filling process even though the process is working well (*false alarm*)
+.
+
+On the other hand, when the population mean is 1.98 litres and you conclude that the population mean is 2 litres, you commit a 
+Type II error. Here, you allow the process to continue without adjustment, even though an adjustment is needed (*missed 
+opportunity*).
+
+Here, we select $\alpha$ = 0.05 and n, sample size = 50.
+
+### Step 3:  Identify the test statistic
+
+We know the population standard deviation and the sample is a large sample, n>30. So you use the normal distribution and the
+$Z_STAT$ test statistic.
+
+### Step 4: Calculate the critical value
+
+We know the $\alpha$ is 0.05. So, the critical values of the $Z_STAT$ test statistic are -1.96 and 1.96.
+
+print(np.abs(round(stats.norm.isf(q = 0.025),2))) # Here we use alpha by 2  for two-tailed test
+
+* ### Rejection region is $Z_{STAT}$ < -1.96 or $Z_{STAT}$ > 1.96.
+* ### Acceptance or non-rejection regions is -1.96 $\leq$ $Z_{STAT}$ $\leq$ 1.96
+
+We collect the sample data, calculate the test statistic. 
+In our example, 
+* $\overline{X}$ = 2.001
+* $\mu$   = 2
+* $\sigma$ = 15
+* n       = 50
+* $Z_{STAT} = \frac{\overline{X} - \mu} {\frac{\sigma}{\sqrt{n}}}$ 
+
+XAvg  = 2.001
+mu    = 2
+sigma = 15
+n     = 50
+Z = (XAvg - mu)/(sigma/np.sqrt(n))
+print('Value of Z is %2.5f' %Z)
+
+In this example, Z = 0.00047 lies in the acceptance region because, 
+-1.96 < Z = 0.00047 < 1.96.
+
+So the statistical decision is not to reject the null hypothesis.
+
+### So there is no sufficient evidence  to prove that the mean fill is different from 2 litres.
+
+# 8.One sample and two sample  (test for mean and not for proportion) 
+
+## t test
+
+### Very rarely we know the variance of the population. 
+
+A common strategy to assess hypothesis is to conduct a t test. A t test can tell whether two groups have the same mean. 
+A t test can be estimated for:
+* 1) One sample t test
+* 2) Two sample t test (including paired t test)
+
+We assume that the samples are randomly selected, independent and come from a normally distributed population with unknown but 
+equal variances.
+
+### One sample t test
+
+from scipy.stats             import ttest_1samp,ttest_ind, wilcoxon
+from statsmodels.stats.power import ttest_power
+import matplotlib.pyplot     as     plt
+
+## Two sample test
+
+** Two sample t test (Snedecor and Cochran 1989) is used to determine if two population means are equal.
+A common application is to test if a new treatment or approach or process is yielding better results than the current treatment 
+or approach or process.**
+
+* 1) Data is *paired* - For example, a group of students are given coaching classes and effect of coaching on the  marks scored 
+is determined.
+* 2) Data is *not paired* - For example, find out  whether the miles per gallon of  cars of Japanese make is superior to cars 
+of Indian make.
+
+## Two sample t test for unpaired data is defined as 
+* $H_0$: $\mu1$        = $\mu2$ 
+* $H_a$: $\mu1$ $\neq$ = $\mu2$ 
+
+### Test statistic T = $\frac{\overline{X_1} - \overline{X_2}}{\sqrt{\frac{{s_1}^2} {n1}+ \frac{{s_2}^2}{n2}}}$
+
+* where n1 and n2 are the sample sizes and X1 and X2 are the sample means 
+* ${S_1}^2$ and ${S_2}^2$ are sample variances
+
+## Example
+
+Compare two unrelated samples. Data was collected on the weight loss of 16 women and 20 men enrolled in a weight reduction 
+program.
+At $\alpha$ = 0.05, test whether the weight loss of these two samples is different.
+
+### Solution
+
+Weight_loss_Male   = [ 3.69, 4.12, 4.65, 3.19,  4.34, 3.68, 4.12, 4.50, 3.70, 3.09,3.65, 4.73, 3.93, 3.46, 3.28, 4.43, 4.13, 3.62, 3.71, 2.92]
+Weight_loss_Female = [2.99, 1.80, 3.79, 4.12, 1.76, 3.50, 3.61, 2.32, 3.67, 4.26, 4.57, 3.01, 3.82, 4.33, 3.40, 3.86]
+
+from    scipy.stats             import  ttest_1samp,ttest_ind, wilcoxon, ttest_ind_from_stats
+import  scipy.stats             as      stats  
+from    statsmodels.stats.power import  ttest_power
+import  matplotlib.pyplot       as      plt
+
+### Step 1: Define null and alternative hypothesis
+
+In testing whether weight reduction of female and male are same,the null hypothesis states that mean weight reduction, $\mu{M}$ equals $\mu{F}$. The alternative hypthesis states that the weight reduction is different for Male and Female, $\mu{M}$ $\neq$ $\mu{F}$
+
+* $H_0$: $\mu{M}$ - $\mu{F}$ =      0
+* $H_A$: $\mu{M}$ - $\mu{F}$ $\neq$  0
+
+### Step 2: Decide the significance level
+
+Here we select $\alpha$ = 0.05 and sample size < 30 and population standard deviation is not known.
+
+### Step 3: Identify the test statistic
+
+* We have two samples and we do not know the population standard deviation.
+* Sample sizes for both samples are not same.
+* The sample is not a large sample, n < 30. So you use the t distribution and the $t_STAT$ test statistic for two sample
+unpaired test.
+
+### Step 4: Calculate the p - value and test statistic
+
+** We use the scipy.stats.ttest_ind to calculate the t-test for the means of TWO INDEPENDENT samples of scores given the two 
+sample observations. This function returns t statistic and two-tailed p value.**
+
+** This is a two-sided test for the null hypothesis that 2 independent samples have identical average (expected) values. This 
+test assumes that the populations have identical variances.**
+
+t_statistic, p_value  =  stats.ttest_ind(Weight_loss_Male,Weight_loss_Female)
+print('P Value %1.3f' % p_value)    
+
+### Step 5:  Decide to reject or accept null hypothesis
+
+In this example, p value is 0.076 and it is more than 5% level of significance
+
+So the statistical decision is to accept the null hypothesis at 5% level of significance.
+
+### So there is no sufficient evidence  to reject the null hypothesis that the weight loss of these men and women is same.
